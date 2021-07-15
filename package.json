@@ -1,6 +1,6 @@
 {
   "name": "onpasive_assignement",
-  "version": "1.0.1",
+  "version": "1.0.0",
   "description": "User Registration and signup",
   "main": "server.js",
   "scripts": {

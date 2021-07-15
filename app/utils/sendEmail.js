@@ -3,14 +3,17 @@ const handlebars = require("handlebars");
 const fs = require("fs");
 const path = require("path");
 
+const dotenv = require('dotenv');
+dotenv.config();
+
 exports.sendEmail = async (email, subject, payload, template) => {
   try {
     // create reusable transporter object using the default SMTP transport
     const transporter = nodemailer.createTransport({
       service: 'gmail',
       auth: {
-        user: 'akhilreddy89853@gamil.com',
-        pass: '9490848083', // naturally, replace both with your real credentials or an application-specific password
+        user: process.env.EMAIL,
+        pass: process.env.EMAIL_PASSWORD, // naturally, replace both with your real credentials or an application-specific password
       },
     });
 
@@ -27,9 +30,7 @@ exports.sendEmail = async (email, subject, payload, template) => {
 
     // Send email
     transporter.sendMail(options(), (error, info) => {
-      console.log("inside sending mail");
       if (error) {
-        console.log("Error occured", error);
         return error;
       } else {
         return res.status(200).json({
@@ -38,7 +39,7 @@ exports.sendEmail = async (email, subject, payload, template) => {
       }
     });
   } catch (error) {
-    console.log("Error occured in catch", error);
+
     return error;
   }
 };
