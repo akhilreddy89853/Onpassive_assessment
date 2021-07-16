@@ -18,4 +18,4 @@ The Node.js project uses an [open governance model](./GOVERNANCE.md). The
 
 ## Run It
  npm install
-`npm start
+ node server.js

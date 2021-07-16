@@ -11,8 +11,16 @@ const { user } = require("../models");
 const dotenv = require('dotenv');
 dotenv.config();
 
+exports.generateToken = (req, res) => {
+    var token = jwt.sign({ company: 'Onpassive' }, process.env.secret, {
+        expiresIn: 86400 // 24 hours
+    });
+    res.status(200).send({
+        token: token
+    })
+}
+
 exports.signup = (req, res) => {
-    // Save User to Database
     User.create({
         username: req.body.username,
         email: req.body.email,
@@ -66,11 +74,11 @@ exports.signin = (req, res) => {
 exports.resetPasswordLink = (req, res) => {
     User.findOne({
         where: {
-            email: req.email
+            email: req.body.email
         }
     })
         .then(user => {
-            if (!user) {
+            if (user == null) {
                 return res.status(404).send({ message: "User Not found." });
             }
             var token = jwt.sign({ id: user.id, email: user.email }, process.env.secret, {
@@ -87,7 +95,10 @@ exports.resetPasswordLink = (req, res) => {
                 },
                 "/template/requestResetPassword.handlebars"
             ).then(response => {
-                res.status(200).send("Reset password link has been set successfully!")
+                res.status(200).send({
+                    message: "Reset password link has been set successfully!"
+                }
+                )
             })
                 .catch(err => {
                     res.status(500).send({ message: err.message });
@@ -99,7 +110,6 @@ exports.resetPasswordLink = (req, res) => {
 }
 
 exports.resetPassword = (req, res) => {
-    console.log("token in reset", req.body.token);
     jwt.verify(req.body.token, process.env.secret, (err, decoded) => {
         if (err) {
             return res.status(401).send({

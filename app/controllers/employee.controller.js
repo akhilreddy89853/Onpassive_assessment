@@ -16,25 +16,26 @@ var connection = mysql.createConnection({
 })
 
 exports.createEmployee = (req, res) => {
-    if (!req.body) {
-        res.status(204).send({
+    if (Object.keys(req.body).length === 0) {
+        res.send({
             message: "Request body cannot be empty!"
         })
-    }
-    Employee.create({
-        fullName: req.body.fullName,
-        jobTitle: req.body.jobTitle,
-        department: req.body.department,
-        location: req.body.location,
-        age: req.body.age,
-        Salary: req.body.Salary
-    })
-        .then(employee => {
-            res.status(200).send({ message: "Employee has been created successfully!" });
+    } else {
+        Employee.create({
+            fullName: req.body.fullName,
+            jobTitle: req.body.jobTitle,
+            department: req.body.department,
+            location: req.body.location,
+            age: req.body.age,
+            Salary: req.body.Salary
         })
-        .catch(err => {
-            res.status(500).send({ message: err.message });
-        });
+            .then(employee => {
+                res.status(200).send({ message: "Employee has been created successfully!" });
+            })
+            .catch(err => {
+                res.status(500).send({ message: err.message });
+            });
+    }
 }
 
 exports.listAllEmployees = (req, res) => {
@@ -170,7 +171,7 @@ exports.dashboardCount = (req, res) => {
             })
         })
 
-    
+
 }
 
 const getPagination = (page, size) => {

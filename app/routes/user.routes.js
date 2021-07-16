@@ -10,13 +10,9 @@ module.exports = function (app) {
         );
         next();
     });
-
-    app.post(
-        "/api/auth/signup",
-        verifySignUp.checkDuplicateUsernameOrEmail,
-        User.signup
-    );
-    app.post("/api/auth/signin", User.signin);
-    app.post("/api/auth/requestResetPassword",authJwt.verifyToken,User.resetPasswordLink);
-    app.put("/api/auth/restPassword",authJwt.verifyToken,User.resetPassword)
+    app.get("/api/user/getToken", User.generateToken);
+    app.post("/api/user/signup", authJwt.verifyToken,verifySignUp.checkDuplicateUsernameOrEmail, User.signup);
+    app.post("/api/user/signin",authJwt.verifyToken, User.signin);
+    app.post("/api/user/requestResetPassword", authJwt.verifyToken, User.resetPasswordLink);
+    app.put("/api/user/restPassword", authJwt.verifyToken, User.resetPassword)
 };
